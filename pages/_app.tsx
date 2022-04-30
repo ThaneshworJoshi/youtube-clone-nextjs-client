@@ -1,10 +1,22 @@
+import Head from 'next/head';
 import '../styles/globals.css';
+import { NextPage } from 'next';
 import type { AppProps } from 'next/app';
+import { ReactElement, ReactNode } from 'react';
 import { MantineProvider } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
-import Head from 'next/head';
 
-function MyApp({ Component, pageProps }: AppProps) {
+type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+  const getLayout = Component.getLayout || ((page) => page);
+
   return (
     <>
       <Head>
@@ -20,7 +32,11 @@ function MyApp({ Component, pageProps }: AppProps) {
         theme={{ colorScheme: 'light' }}
       >
         <NotificationsProvider>
-          <Component {...pageProps} />;
+          {getLayout(
+            <main>
+              <Component {...pageProps} />;
+            </main>
+          )}
         </NotificationsProvider>
       </MantineProvider>
     </>
