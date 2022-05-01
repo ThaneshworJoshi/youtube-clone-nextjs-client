@@ -64,3 +64,7 @@ export function updateVideo({
     })
     .then((res) => res.data);
 }
+
+export function getVideos() {
+  return axios.get(videosBase).then((res) => res.data);
+}

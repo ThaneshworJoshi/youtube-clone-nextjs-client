@@ -16,6 +16,7 @@ import { updateVideo, uploadVideo } from '../api';
 import { useForm } from '@mantine/hooks';
 import { Video } from '../types';
 import { AxiosError } from 'axios';
+import { useVideo } from '../context/videos';
 
 function EditVideoForm({
   videoId,
@@ -24,6 +25,7 @@ function EditVideoForm({
   videoId: string;
   setOpened: Dispatch<SetStateAction<boolean>>;
 }) {
+  const { refetch } = useVideo();
   const form = useForm({
     initialValues: {
       title: '',
@@ -36,6 +38,7 @@ function EditVideoForm({
   const mutation = useMutation<Video, AxiosError, input['0']>(updateVideo, {
     onSuccess: () => {
       setOpened(false);
+      refetch();
     },
   });
 
